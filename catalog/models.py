@@ -4,11 +4,11 @@ from django.db import models
 class Category(models.Model):
     name = models.CharField(
         max_length=100,
-        verbose_name="Наименование категории",
-        help_text="Введите наименование категории",
+        verbose_name="Категория",
+        help_text="Введите название категории",
     )
-    product_description = models.TextField(
-        verbose_name="Описание категории",
+    description = models.TextField(
+        verbose_name="Описание",
         help_text="Введите описание категории",
         blank=True,
         null=True,
@@ -17,6 +17,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
+        ordering = ["name"]
 
     def __str__(self):
         return self.name
@@ -25,47 +26,48 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(
         max_length=100,
-        verbose_name="Наименование товара",
-        help_text="Введите наименование товара",
+        verbose_name="Название продукта",
+        help_text="Введите название продукта",
     )
-    product_description = models.TextField(
-        verbose_name="Описание товара",
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.CASCADE,
+        verbose_name="Категория",
+        help_text="Введите название категории",
+        related_name="products",
+    )
+    price = models.FloatField(verbose_name="Цена", help_text="Введите цену товара")
+    photo = models.ImageField(
+        upload_to="catalog/photo",
+        blank=True,
+        null=True,
+        verbose_name="Фото",
+        help_text="Вставьте фотографию товара",
+    )
+    description = models.TextField(
+        verbose_name="Описание",
         help_text="Введите описание товара",
         blank=True,
         null=True,
     )
-    product_photo = models.ImageField(
-        upload_to="product/photo",
-        blank=True,
-        null=True,
-        verbose_name="Фото товара",
-        help_text="Загрузите фото товара",
-    )
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.SET_NULL,
-        verbose_name="Категория товара",
-        help_text="Введите категорию товара",
-        null=True,
-        blank=True,
-        related_name="products",
-    )
-    price = models.IntegerField(
-        verbose_name="Цена за покупку", help_text="Введите стоимость товара"
-    )
     created_at = models.DateField(
-        verbose_name="Дата создания",
-        help_text="Введите дату создания товара",
+        verbose_name="Дата создания", help_text="Укажите дату создания", blank=True, auto_now_add=True
     )
     updated_at = models.DateField(
         verbose_name="Дата последнего изменения",
-        help_text="Введите дату последнего изменения",
+        help_text="Укажите дату последнего изменения",
+        blank=True, auto_now=True,
+    )
+    views_counter = models.PositiveIntegerField(
+        verbose_name="Счетчик просмотров",
+        help_text="Укажите количество просмотров",
+        default=0
     )
 
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
-        ordering = ["category", "price"]
+        ordering = ["name", "category", "description"]
 
     def __str__(self):
-        return self.name
+        return f"{self.name} - {self.price}"
