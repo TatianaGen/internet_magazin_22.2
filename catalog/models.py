@@ -22,9 +22,6 @@ class Category(models.Model):
         return self.name
 
 
-class Product:
-    pass
-
 
 class Product(models.Model):
     name = models.CharField(
@@ -73,44 +70,41 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    class Version(models.Model):
-        product = models.ForeignKey(
-            Product,
-            related_name="versions",
-            on_delete=models.SET_NULL,
-            null=True,
-            blank=True,
-            verbose_name="Продукт",
-            help_text="Выберите продукт",
-        )
-        version_number = models.CharField(
-            max_length=10,
-            verbose_name="Номер версии",
-            help_text="Введите номер версии",
-            null=True,
-            blank=True,
-        )
-        version_name = models.CharField(
-            max_length=100,
-            verbose_name="Название версии",
-            help_text="Введите название версии",
-            null=True,
-            blank=True,
-        )
-        is_version_active = models.BooleanField(
-            default=False,
-            verbose_name="Активная версия",
-            help_text="Является ли версия активной",
-        )
 
-        class Meta:
-            verbose_name = "Версия"
-            verbose_name_plural = "Версии"
-            ordering = ["version_number", "version_name"]
+class Version(models.Model):
+    product = models.ForeignKey(
+        Product,
+        related_name="versions",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Продукт",
+        help_text="Выберите продукт",
+    )
+    version_number = models.CharField(
+        max_length=10,
+        verbose_name="Номер версии",
+        help_text="Введите номер версии",
+        null=True,
+        blank=True,
+    )
+    version_name = models.CharField(
+        max_length=100,
+        verbose_name="Название версии",
+        help_text="Введите название версии",
+        null=True,
+        blank=True,
+    )
+    is_version_active = models.BooleanField(
+        default=False,
+        verbose_name="Активная версия",
+        help_text="Является ли версия активной",
+    )
 
-        def __str__(self):
-            return self.version_name
+    class Meta:
+        verbose_name = "Версия"
+        verbose_name_plural = "Версии"
+        ordering = ["version_number", "version_name"]
 
-
-class Version:
-    pass
+    def __str__(self):
+        return self.version_name
