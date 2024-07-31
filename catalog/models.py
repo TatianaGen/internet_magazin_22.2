@@ -1,110 +1,120 @@
 from django.db import models
 
+from users.models import User
+
 
 class Category(models.Model):
+    """
+    Модель для хранения информации о категории продукта
+    """
     name = models.CharField(
         max_length=100,
-        verbose_name="Наименование категории",
+        verbose_name="Наименование",
         help_text="Введите наименование категории",
     )
-    product_description = models.TextField(
-        verbose_name="Описание категории",
+    description = models.TextField(
+        verbose_name="Описание",
         help_text="Введите описание категории",
-        blank=True,
         null=True,
+        blank=True,
     )
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
 
-    def __str__(self):
-        return self.name
-
-
 
 class Product(models.Model):
+    """
+    Модель для хранения информации о продукте
+    """
     name = models.CharField(
         max_length=100,
-        verbose_name="Наименование товара",
+        verbose_name="Наименование",
         help_text="Введите наименование товара",
     )
-    product_description = models.TextField(
-        verbose_name="Описание товара",
+    description = models.TextField(
+        verbose_name="Описание",
         help_text="Введите описание товара",
-        blank=True,
         null=True,
+        blank=True,
     )
-    product_photo = models.ImageField(
-        upload_to="product/photo",
-        blank=True,
+    preview = models.ImageField(
+        upload_to="products/photo",
+        verbose_name="Изображение",
+        help_text="Добавьте изображение товара",
         null=True,
-        verbose_name="Фото товара",
-        help_text="Загрузите фото товара",
+        blank=True,
     )
     category = models.ForeignKey(
-        Category,
+        "Category",
         on_delete=models.SET_NULL,
-        verbose_name="Категория товара",
+        verbose_name="Категория",
         help_text="Введите категорию товара",
         null=True,
         blank=True,
-        related_name='products',
+        related_name="products",
     )
-    price = models.IntegerField(
-        verbose_name="Цена за покупку", help_text="Введите стоимость товара"
+    price = models.PositiveIntegerField(verbose_name="Цена", null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated_at = models.DateTimeField(
+        auto_now=True, verbose_name="Дата последнего изменения"
     )
-    created_at = models.DateField(
-        verbose_name="Дата создания", help_text="Введите дату создания товара",
-    )
-    updated_at = models.DateField(
-        verbose_name="Дата последнего изменения",
-        help_text="Введите дату последнего изменения",
-    )
-
-    class Meta:
-        verbose_name = "Товар"
-        verbose_name_plural = "Товары"
-        ordering = ["category", "price"]
+    owner = models.ForeignKey(User, verbose_name='Владелец', blank=True, null=True, on_delete=models.SET_NULL)
+    is_published = models.BooleanField(default=False, verbose_name='Опупликован')
 
     def __str__(self):
         return self.name
 
-
-class Version(models.Model):
-    product = models.ForeignKey(
-        Product,
-        related_name="versions",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name="Продукт",
-        help_text="Выберите продукт",
-    )
-    version_number = models.CharField(
-        max_length=10,
-        verbose_name="Номер версии",
-        help_text="Введите номер версии",
-        null=True,
-        blank=True,
-    )
-    version_name = models.CharField(
-        max_length=100,
-        verbose_name="Название версии",
-        help_text="Введите название версии",
-        null=True,
-        blank=True,
-    )
-    is_version_active = models.BooleanField(
-        default=False,
-        verbose_name="Активная версия",
-        help_text="Является ли версия активной",
-    )
-
     class Meta:
-        verbose_name = "Версия"
-        verbose_name_plural = "Версии"
-        ordering = ["version_number", "version_name"]
+        verbose_name = "Продукт"
+        verbose_name_plural = "Продукты"
+        ordering = ["name", "category"]
+        permissions = [
+            ('can_edit_description', 'Can edit description'),
+            ('can_edit_category', 'Can edit category'),
+            ("can_change_is_published", "Can change sign of publication")
+        ]
+
+
+class Contact(models.Model):
+    name = models.CharField(
+        max_length=100,
+        verbose_name="Имя",
+    )
+    phone = models.CharField(
+        max_length=50,
+        verbose_name="Телефон",
+        null=True,
+        blank=True,
+    )
+    message = models.TextField(
+        verbose_name="Сообщение",
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
-        return self.version_name
+        return self.name
+
+    class Meta:
+        verbose_name = "Контакт"
+        verbose_name_plural = "Контакты"
+
+
+class Version(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
+    number = models.PositiveIntegerField(verbose_name='Номер версии', null=True, blank=True)
+    name = models.CharField(max_length=100, verbose_name='Название', null=True, blank=True)
+    is_active = models.BooleanField(default=True, verbose_name='Активная')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Версия'
+        verbose_name_plural = 'Версии'
+        ordering = ['number']
