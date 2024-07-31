@@ -114,7 +114,7 @@ class Migration(migrations.Migration):
                         null=True,
                         on_delete=django.db.models.deletion.SET_NULL,
                         related_name="products",
-                        to="catalog.category",
+                        to="includes.category",
                         verbose_name="Категория товара",
                     ),
                 ),
