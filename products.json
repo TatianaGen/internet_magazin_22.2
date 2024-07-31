@@ -1,0 +1,54 @@
+[
+  {
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+      "name": "Samsung A34",
+      "description": "",
+      "preview": "",
+      "category": 1,
+      "price": 2000,
+      "created_at": "2024-05-10T12:14:59.459Z",
+      "updated_at": "2024-05-10T12:14:59.459Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+      "name": "Lg56",
+      "description": "",
+      "preview": "",
+      "category": 2,
+      "price": 1000,
+      "created_at": "2024-05-10T12:15:43.164Z",
+      "updated_at": "2024-05-10T12:15:43.164Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 3,
+    "fields": {
+      "name": "Philips454",
+      "description": "",
+      "preview": "",
+      "category": 3,
+      "price": 3000,
+      "created_at": "2024-05-10T12:16:03.122Z",
+      "updated_at": "2024-05-10T12:16:03.122Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 4,
+    "fields": {
+      "name": "Zanussi",
+      "description": "",
+      "preview": "",
+      "category": 4,
+      "price": 800,
+      "created_at": "2024-05-10T12:16:42.387Z",
+      "updated_at": "2024-05-10T12:16:42.387Z"
+    }
+  }
+]
