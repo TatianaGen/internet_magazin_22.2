@@ -1,10 +1,9 @@
 from django.contrib import admin
+from blog.models import BlogArticle
 
-from blog.models import BlogPost
 
-
-@admin.register(BlogPost)
-class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug', 'content', 'preview', 'created_at', 'is_published', 'view_count')
-    list_filter = ('title',)
-    search_fields = ('title', 'is_published')
+@admin.register(BlogArticle)
+class BlogAdmin(admin.ModelAdmin):
+    list_display = ("id", "title", "body", "created_at", "is_published", "views_count")
+    list_filter = ("is_published",)
+    search_fields = ("title", "body")
